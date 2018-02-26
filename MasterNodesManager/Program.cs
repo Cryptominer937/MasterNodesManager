@@ -6,7 +6,9 @@ namespace MasterNodesManager
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Менеджер Мастернод начал арбайтен прсторонись =)))))");
+            Console.WriteLine("----------------------------------------------------");
+            Console.ReadLine();
         }
     }
 }
