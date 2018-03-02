@@ -28,19 +28,6 @@ namespace MasterNodesManager
 
                 Thread.Sleep(Int32.Parse(Configuration["TimeReqwestNode"]) * 1000);
             } 
-
-                //Console.ReadKey();
-
-
-
-            //Console.WriteLine("Загрузка истории");
-
-
-            //Console.WriteLine("----------------------------------------------------");
-            //Console.ReadLine();
-            //Console.WriteLine("Сохранение настроек");
-            //Console.WriteLine("Сохранение истории");
-            //Thread.Sleep(5000);
         }
     
 
@@ -75,8 +62,6 @@ namespace MasterNodesManager
                     Console.WriteLine("Отправка денег на биржу {0} монет", sendmoney);
                     bc.SendToAddress(Configuration[item.Path + ":WalletAddress"], sendmoney, "MNManager", "");
                 }
-
-
                 
             }
             Console.WriteLine("----------------------------------------------------");
