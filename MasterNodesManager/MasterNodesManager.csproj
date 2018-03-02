@@ -12,6 +12,8 @@
   <ItemGroup>
     <Reference Include="Bitnet.Client">
       <HintPath>..\..\..\..\Downloads\bitnet-master\bitnet-master\Bitnet.Client\bin\Release\Bitnet.Client.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\Downloads\bitnet-master\bitnet-master\Bitnet.Client\bin\Release\Newtonsoft.Json.dll</HintPath>
