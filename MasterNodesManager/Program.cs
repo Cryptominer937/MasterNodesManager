@@ -1,6 +1,9 @@
 ﻿using System;
-using System.IO;
+using System.Globalization;
+using System.Linq;
+using System.Net;
 using System.Threading;
+using Bitnet.Client;
 using Microsoft.Extensions.Configuration;
 
 namespace MasterNodesManager
@@ -11,41 +14,72 @@ namespace MasterNodesManager
 
         static void Main(string[] args)
         {
-            //// config
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-            Configuration = builder.Build();
+            Console.WriteLine("Менеджер Мастернод начал арбайтен =)))))\n");
+            Console.WriteLine("Загрузка настроек\n");
+            Configuration = Settings.Load();
 
-            Console.WriteLine($"option1 = {Configuration["Option1"]}");
-            Console.WriteLine($"option2 = {Configuration["option2"]}");
-            Console.WriteLine(
-                $"suboption1 = {Configuration["subsection:suboption1"]}");
-            Console.WriteLine();
 
-            Console.WriteLine("Wizards:");
-            Console.Write($"{Configuration["wizards:0:Name"]}, ");
-            Console.WriteLine($"age {Configuration["wizards:0:Age"]}");
-            Console.Write($"{Configuration["wizards:1:Name"]}, ");
-            Console.WriteLine($"age {Configuration["wizards:1:Age"]}");
-            Console.WriteLine();
+            CheckMnSendMoney();
 
-            Console.WriteLine("Press a key...");
-            Console.ReadKey();
+
+            while (true)
+            {
+                CheckMnSendMoney();
+
+                Thread.Sleep(Int32.Parse(Configuration["TimeReqwestNode"]) * 1000);
+            } 
+
+                //Console.ReadKey();
 
 
 
-            Console.WriteLine("Загрузка настроек");
+            //Console.WriteLine("Загрузка истории");
 
 
-            Console.WriteLine("Загрузка истории");
+            //Console.WriteLine("----------------------------------------------------");
+            //Console.ReadLine();
+            //Console.WriteLine("Сохранение настроек");
+            //Console.WriteLine("Сохранение истории");
+            //Thread.Sleep(5000);
+        }
+    
 
-            Console.WriteLine("Менеджер Мастернод начал арбайтен прсторонись =)))))");
+    private static void CheckMnSendMoney()
+        {
+            var valuesSection = Configuration.GetSection("Nodes").GetChildren();
+
             Console.WriteLine("----------------------------------------------------");
-            Console.ReadLine();
-            Console.WriteLine("Сохранение настроек");
-            Console.WriteLine("Сохранение истории");
-            Thread.Sleep(5000);
+
+            foreach (var item in valuesSection)
+            {
+                var bc = new BitnetClient("http://" + Configuration[item.Path + ":Server"] + ":" +
+                                          Configuration[item.Path + ":Port"])
+                {
+                    Credentials = new NetworkCredential(Configuration[item.Path + ":RpcUser"],
+                        Configuration[item.Path + ":RpcPasword"])
+                };
+
+                try
+                {
+                    Console.WriteLine("БАЛАНС {0} РАВЕН {1}", Configuration[item.Path + ":Symbol"],
+                        bc.GetBalance() + "\n");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ЗАПИСАЛ ОШИБКУ ЗАПРОСА В ЛОГ");
+                }
+
+                if (bc.GetBalance() > 1001)
+                {
+                    var sendmoney = bc.GetBalance() - 1001;
+                    Console.WriteLine("Отправка денег на биржу {0} монет", sendmoney);
+                    bc.SendToAddress(Configuration[item.Path + ":WalletAddress"], sendmoney, "MNManager", "");
+                }
+
+
+                
+            }
+            Console.WriteLine("----------------------------------------------------");
         }
     }
 }
