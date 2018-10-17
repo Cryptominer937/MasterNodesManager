@@ -14,8 +14,8 @@ namespace MasterNodesManager
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Менеджер Мастернод начал арбайтен =)))))\n");
-            Console.WriteLine("Загрузка настроек\n");
+            Console.WriteLine("Manager Masternode started work =)))))\n");
+            Console.WriteLine("Loading settings\n");
             Configuration = Settings.Load();
 
 
@@ -48,19 +48,19 @@ namespace MasterNodesManager
 
                 try
                 {
-                    Console.WriteLine("БАЛАНС {0} РАВЕН {1}", Configuration[item.Path + ":Symbol"],
+                    Console.WriteLine("BALANCE {0} Raven {1}", Configuration[item.Path + ":Symbol"],
                         bc.GetBalance() + "\n");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("ЗАПИСАЛ ОШИБКУ ЗАПРОСА В ЛОГ");
+                    Console.WriteLine("RECORDED query error in the log");
                 }
 
                 if (bc.GetBalance() > 1001)
                 {
                     var sendmoney = bc.GetBalance() - 1001;
-                    Console.WriteLine("Отправка денег на биржу {0} монет", sendmoney);
-                    bc.SendToAddress(Configuration[item.Path + ":WalletAddress"], sendmoney, "MNManager", "");
+                    Console.WriteLine("Sending money to the exchange {0} of coins", sendmoney);
+                    bc.SendToAddress(Configuration[item.Path + ":WalletAddress"], sendmoney, "HKMNManager", "");
                 }
                 
             }
